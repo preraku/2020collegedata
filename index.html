@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+
+    <title>Class of 2020 Decision Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- <script src="sorttable.js"></script> -->
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+
+    </div>
+    <div id="page-wrap"class="col-sm">
+        <h1>Class of 2020 Decision Dashboard</h1>
+    </div>
+    <div class="col-sm">
+
+    </div>
+  </div>
+</div>
+    
+    <script src="sorttable.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript">
+      var table1 = d3.select('#page-wrap').append('div').attr('class','container')
+    .append('div').attr('class','row').attr('id','selectionRow')
+    .append('div').attr('class','col-lg-12').attr('id', 'table1')
+    .append('table');
+
+    var column_names = ['Timestamp','Your Name','Committed School/Institution Name','Major'];
+    // var clicks = {timestamp: 0, name: 0, school: 0, major: 0};
+
+    function tabulate(position, data, columns) {
+      // var table = d3.select('body').append('table')
+      position.attr('class', 'table table-hover table-bordered table-striped sortable');
+      position.attr('id', 'table2');
+      var thead = position.append('thead')
+      var tbody = position.append('tbody');
+
+      // append the header row
+      thead.append('tr')
+        .selectAll('th')
+        .data(columns).enter()
+        .append('th')
+          .text(function (column) { return column; });
+
+      // create a row for each object in the data
+      var rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr');
+
+      // create a cell in each row for each column
+      var cells = rows.selectAll('td')
+        .data(function (row) {
+          return columns.map(function (column) {
+            return {column: column, value: row[column]};
+          });
+        })
+        .enter()
+        .append('td')
+          .text(function (d) { return d.value; });
+
+
+        return position;
+    };
+
+    d3.csv('data.csv', function (error,data) {
+        // render the table(s)
+        tabulate(table1,data,column_names);
+        sorttable.makeSortable(document.getElementById('table2'));
+    });
+
+    
+
+    // sorttable.makeSortable(document.getElementById('table2'));
+
+    </script>
+</body>
+
+</html>
